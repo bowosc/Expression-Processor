@@ -1,3 +1,16 @@
+#TODO
+# more advanced operators:
+#   - sin, cos, tan
+#   - sec, csc, cot
+#   - sin^-1 or arcsin, ect.
+#   - exp(x) = e^x
+#   - sqrt()
+#   - ln()
+#   - abs()
+#   - constants like e and pi and bowie's constant
+# substitute variable(s)
+# evaluator part (RPN to value)
+
 
 class rpn:
     def infixtorpn(input):
@@ -5,9 +18,10 @@ class rpn:
         Converts string in infix form to reverse polish notation (outfix).
         Input should be a string, output will be a list of each character.
         '''
-        input = list(input)
         operators = ['+', '-', '*', '/', '^']
         greateroperators = ['+', '-', '*', '/', '^', '(', ')']
+        advancedoperators = ['sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'arcsin', 'arccos', 'arctan', 'arcsec', 'arccsc', 'arccot', 'exp', 'sqrt', 'ln', 'abs']
+        constants = ['e', 'pi', 'π']
         stack = []
         result = []
         topofstack = "none"
@@ -22,8 +36,14 @@ class rpn:
     
         previous = None
 
-        # adding multiplication signs before openparens and after closedparens that dont already have multiplication signs
+        # note that input list is still a string rn
+        for advop in advancedoperators:
+            return
+            # go through string and replace single symbols for the advops
 
+        input = list(input)
+
+        # adding multiplication signs before openparens and after closedparens that dont already have multiplication signs
         for i in input:
             position += 1
             if previous:
