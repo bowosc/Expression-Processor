@@ -11,38 +11,57 @@
 # substitute variable(s)
 # evaluator part (RPN to value)
 
+operators = ['+', '-', '*', '/', '^']
+greateroperators = ['+', '-', '*', '/', '^', '(', ')']
+advancedoperators = { # these are ordered like this because the search & replace tool goes first to last, and all the arcs will get screwed up if it replaces the basic trigs first.
+        'arcsin': 'h', 
+        'arccos': 'j', 
+        'arctan': 'k', 
+        'arcsec': 'l', 
+        'arccsc': 'm', 
+        'arccot': 'n', 
+        'sin':'a', 
+        'cos':'b', 
+        'tan':'c', 
+        'sec': 'd', 
+        'csc': 'f', 
+        'cot': 'g', 
+        'exp': 'o', 
+        'sqrt': 'p', 
+        'ln': 'q', 
+        'abs': 'r'
+    }
+constants = ['e', 'pi', 'π']
+stack = []
+result = []
+topofstack = "none"
+pemdas = {
+        "^": 5, 
+        "*": 4, 
+        "/": 3, 
+        "+": 2, 
+        "-": 1
+    }
 
 class rpn:
     def infixtorpn(input):
         '''
         Converts string in infix form to reverse polish notation (outfix).
         Input should be a string, output will be a list of each character.
+        the only variable used should be x.
         '''
-        operators = ['+', '-', '*', '/', '^']
-        greateroperators = ['+', '-', '*', '/', '^', '(', ')']
-        advancedoperators = ['sin', 'cos', 'tan', 'sec', 'csc', 'cot', 'arcsin', 'arccos', 'arctan', 'arcsec', 'arccsc', 'arccot', 'exp', 'sqrt', 'ln', 'abs']
-        constants = ['e', 'pi', 'π']
-        stack = []
-        result = []
-        topofstack = "none"
-        pemdas = {
-            "^": 5, 
-            "*": 4, 
-            "/": 3, 
-            "+": 2, 
-            "-": 1
-            }
         position = -1
-    
         previous = None
 
         # note that input list is still a string rn
-        for advop in advancedoperators:
-            return
+        for op in advancedoperators:
+            input = input.replace(op, advancedoperators[op])
+            print("replaced {} with {}".format(op, advancedoperators[op]))
             # go through string and replace single symbols for the advops
 
         input = list(input)
 
+    
         # adding multiplication signs before openparens and after closedparens that dont already have multiplication signs
         for i in input:
             position += 1
@@ -50,7 +69,7 @@ class rpn:
                 if i == ")" and previous == "(": # these could probably just be removed but this option is smoother imo
                     input.insert(position - 1, "1*1")
                 elif i == "(":
-                    if previous != '(' and previous not in operators:
+                    if previous != '(' and (previous not in operators) and (previous not in advancedoperators.values()):
                         input.insert(position, "*")
                 elif previous == ")":
                     if i not in operators:
@@ -75,8 +94,8 @@ class rpn:
             if c <= len(input):
                 previous = input[c-1]
 
-        return input
-    
+
+        # forgot what this was for and scared to delete it :)
         '''        for i in input:
             position += 1
             print("------===------")
@@ -102,6 +121,7 @@ class rpn:
                     print("current list:")
                     print(input)
            '''
+        
         for i in input:
             print("----------------")
             if stack == []:
@@ -174,5 +194,3 @@ class rpn:
         return result
 
 
-
-rpn.infixtorpn("33+22(5)")
