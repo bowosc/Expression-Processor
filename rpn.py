@@ -1,15 +1,8 @@
+import math
 #TODO
-# more advanced operators:
-#   - sin, cos, tan
-#   - sec, csc, cot
-#   - sin^-1 or arcsin, ect.
-#   - exp(x) = e^x
-#   - sqrt()
-#   - ln()
-#   - abs()
-#   - constants like e and pi and bowie's constant
+# be able to process advancedoperators (sin, ln, abs)
+# process constants like e and pi
 # substitute variable(s)
-# evaluator part (RPN to value)
 
 operators = ['+', '-', '*', '/', '^']
 greateroperators = ['+', '-', '*', '/', '^', '(', ')']
@@ -67,7 +60,8 @@ class rpn:
             position += 1
             if previous:
                 if i == ")" and previous == "(": # these could probably just be removed but this option is smoother imo
-                    input.insert(position - 1, "1*1")
+                    input.pop(position)
+                    input.pop(position)
                 elif i == "(":
                     if previous != '(' and (previous not in operators) and (previous not in advancedoperators.values()):
                         input.insert(position, "*")
@@ -84,10 +78,11 @@ class rpn:
             i = input[c]
 
             if previous:
-                if i not in greateroperators and previous not in greateroperators:
-                    ainput[c-1] = str(previous) + str(i)
-                    ainput.pop(c)
-                    c -= 1
+                if position > 0:
+                    if i not in greateroperators and previous not in greateroperators:
+                        ainput[c-1] = str(previous) + str(i)
+                        ainput.pop(c)
+                        c -= 1
 
             
             c += 1
@@ -95,7 +90,8 @@ class rpn:
                 previous = input[c-1]
 
 
-        # forgot what this was for and scared to delete it :)
+        # forgot what this was for and scared to delete
+                
         '''        for i in input:
             position += 1
             print("------===------")
@@ -133,8 +129,9 @@ class rpn:
             
 
             if i not in operators and i not in ["(", ")"]:
-                result.append(i)
-                print("appended result with numbah")
+                if i not in advancedoperators.values():
+                    result.append(i)
+                    print("appended result with numbah")
             elif i == "(":
                 stack.append(i)
                 print("appended stack parenthesie")
@@ -147,7 +144,7 @@ class rpn:
                     else:
                         result.append(f)
                         stack.pop()
-            elif i in operators:
+            elif i in operators or i in advancedoperators.values():
                 if stack == []:
                     stack.append(i)
                     print("appended stack 1")
@@ -156,16 +153,20 @@ class rpn:
                     stack.append(i)
                     print("appended stack 1")
 
+                elif i in advancedoperators.values():
+                    stack.append(i)
+                    print("appended stack 1.5") # if this method gets screwed up, its probably here lol
+
                 elif pemdas.get(i) > pemdas.get(stack[-1]):
                     stack.append(i)
                     print("appended stack 2")
 
-                elif pemdas.get(i) <= pemdas.get(stack[-1]):
+                elif pemdas.get(i) <= pemdas.get(stack[-1]): # somewhere around here
                     print("appended stack 3")
                     for f in reversed(stack):
                         if f == "(":
-                            break
-                        if pemdas.get(i) <= pemdas.get(f):
+                            stack.append(i)
+                        elif pemdas.get(i) <= pemdas.get(f):
                             result.append(f)
                             stack.pop()
                             print("dumb2")
@@ -175,15 +176,16 @@ class rpn:
                             break
                         else:
                             print("error! pemdas part is broken again.")
-                    if stack == []:
-                        stack.append(i)
+                        
+                        if stack == []:
+                            stack.append(i)
                     print(stack)
             else:
                 print("-=[0][0][0] Error! Unhandled character! [0][0][0]=-") 
 
             print("Input: {}".format(input))
             print("Focus (i): {}".format(i))
-            print("Stack: {}".format(stack))
+            print("Current stack: {}".format(stack))
             print("Initial top of stack: {}".format(topofstack))
             print("Result: {}".format(result))  
 
@@ -191,6 +193,38 @@ class rpn:
         for s in reversed(stack):
             result.append(s)
 
+        print(result)
         return result
 
+    def rpntosolution(input):
+        result = []
+        for i in input:
+            '''if i in advancedoperators.values():
+                for key, value in advancedoperators.items():
+                    if value == i:
+                        i = key'''
+            if i in operators:
+                b = float(stack[-1])
+                a = float(stack[-2])
+                if i == "+":
+                    m = a + b
+                elif i == "-":
+                    m = a - b
+                elif i == "/":
+                    m = a / b
+                elif i == "*":
+                    m = a * b
+                elif i == "^":
+                    m = a ** b
+                print("{} {} {} = {}".format(a, i, b, m))
+                stack.pop()
+                stack.pop()
+                stack.append(m)
+                m = str(m)
+            else:
+                print("added to stack " + i)
+                stack.append(i)
+        print(stack)
+        result = stack[-1]
+        return result
 
