@@ -1,12 +1,12 @@
 import math
 from rpn import rpn
 
-formula = "1/2+3*5^6"
+formula = "sin(3^cos(4pi))/ln(4)"
 
 def run():
     b = rpn.infixtorpn(formula)
     b = rpn.rpntosolution(b)
-    print("finale:")
+    print("=====-----finale:")
     print(b)
 
 if __name__ == "__main__":
