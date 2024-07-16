@@ -97,23 +97,26 @@ class rpn:
         # adding multiplication signs before constants that don't already have operators
         previous = None
         position = -1
+        skipthis = False
         for i in input:
             position += 1
-            if previous:
+            if skipthis == True:
+                skipthis = False
+            elif previous:
                 if i in constants.values():
                     if previous not in operators:
                         if previous != "(": # previous != i is a dumb fix, there exists a safer one
                             input.insert(position, "*")
                             print("c put a little * at pos " + str(position) + str(i) + str(previous))
                             position += 1
+                            skipthis = True
             previous = i
-
 
         position = -1
         previous = None
         ainput = input
         c = 0
-        # combining multiple number elements (technically combines anything without * between them) into one element
+        # combining multiple (technically combines anything without * between them) into one element
         while c < len(input):
             i = input[c]
 

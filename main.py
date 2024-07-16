@@ -1,7 +1,7 @@
 import math
 from rpn import rpn
 
-formula = "sin(3^cos(4pi))/ln(4)"
+formula = "eee"
 
 def run():
     b = rpn.infixtorpn(formula)
