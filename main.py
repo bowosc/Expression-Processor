@@ -1,11 +1,10 @@
 import math
 from rpn import rpn
 
-formula = "eee"
+formula = "3/2"
 
 def run():
-    b = rpn.infixtorpn(formula)
-    b = rpn.rpntosolution(b)
+    b = rpn.calculateInfix(formula)
     print("=====-----finale:")
     print(b)
 

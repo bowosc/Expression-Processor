@@ -1,9 +1,15 @@
 import math
 
+#TODO
+# variable replacement ig 
+# probably test to see it actually works on all functions
+# code is stupid messy, clean this stuff up, put it in functions, use good practice, whatever
+
+
 
 operators = ['+', '-', '*', '/', '^']
 greateroperators = ['+', '-', '*', '/', '^', '(', ')']
-advancedoperators = { # these are ordered like this because the search & replace tool goes first to last, and all the inverse trig will get screwed up if it replaces the basic trigs first.
+advancedoperators = { # these are ordered like this because the search & replace tool goes first to last, and all the inverse trig will get screwed up if it replaces the basic trig strings first.
         'arcsin': 'h', 
         'arccos': 'j', 
         'arctan': 'k', 
@@ -37,28 +43,37 @@ pemdas = {
         "-": 1
     }
 
-class rpn:
-    def infixtorpn(input):
-        '''
-        Converts string in infix form to reverse polish notation (outfix).
-        Input should be a string, output will be a list of each character.
-        the only variable used should be x. many other characters are used internally as placeholders for operations.
-        '''
-        position = -1
-        previous = None
+# ẍẍẍ\o_,ẍẍẍ 
+#      `cmere
 
-        # search and replace all operators and constants to be single-chars, to make processing easier
+class rpn:
+    '''
+    Converts string in infix form to reverse polish notation (outfix).
+    Input should be a string, output will be a list of each character.
+    The only variable used should be x. Many other characters are used internally as placeholders for operations.
+    '''
+
+    def processAdvops(input):
+        '''
+        Input must be a string.
+        Search and replaces all operators and constants to be single chars.
+        '''
         for op in advancedoperators:
             input = input.replace(op, advancedoperators[op])
             print("replaced any instances of {} with {}".format(op, advancedoperators[op]))
         for const in constants:
             input = input.replace(const, constants[const])
             print("replaced any instances of {} with {}".format(const, constants[const]))
+        return input
 
-        input = list(input)
+    def impMultParens(input):
+        '''
+        Input must be a list.
+        Adds multiplication signs before openparens and after closedparens that don't already have operators.
+        ''' 
+        position = -1
+        previous = None
 
-        print("got there 1")
-        # adding multiplication signs before openparens and after closedparens that dont already have operators 
         for i in input:
             position += 1
 
@@ -76,10 +91,15 @@ class rpn:
                     if i not in operators and i != ")":
                         input.insert(position, "*")
             previous = i
-        
+        return input
+    
+    def impMultAdvops(input):
+        '''
+        Input must be a list.
+        Adds multiplication signs before and after advancedoperators that don't already have operators.
+        '''
         previous = None
         position = -1
-        # adding multiplication signs before advops that don't already have operators
         for i in input:
             position += 1
 
@@ -93,8 +113,13 @@ class rpn:
                             position += 1
                     
             previous = i
-        
-        # adding multiplication signs before constants that don't already have operators
+        return input
+    
+    def impMultConstants(input):
+        '''
+        Input must be a list.
+        Adds multiplication signs before constants that don't already have operators.
+        '''
         previous = None
         position = -1
         skipthis = False
@@ -105,60 +130,101 @@ class rpn:
             elif previous:
                 if i in constants.values():
                     if previous not in operators:
-                        if previous != "(": # previous != i is a dumb fix, there exists a safer one
+                        if previous != "(":
                             input.insert(position, "*")
                             print("c put a little * at pos " + str(position) + str(i) + str(previous))
                             position += 1
                             skipthis = True
             previous = i
+        return input
 
-        position = -1
+    def numCombine(input):
+        '''
+        Input must be a list.
+        Combines multiple floats (or anything without operators between them) into one element.
+        '''
         previous = None
         ainput = input
         c = 0
-        # combining multiple (technically combines anything without * between them) into one element
+        
         while c < len(input):
             i = input[c]
 
             if previous:
-                if position > 0:
-                    if i not in greateroperators and previous not in greateroperators:
-                        ainput[c-1] = str(previous) + str(i)
-                        ainput.pop(c)
-                        c -= 1
+                if c > 0:
+                    if i not in greateroperators:
+                        if previous not in greateroperators:
+                            ainput[c-1] = str(previous) + str(i)
+                            ainput.pop(c)
+                            c -= 1
 
-            
             c += 1
             if c <= len(input):
                 previous = input[c-1]
-        # forgot what this was for and scared to delete
-                
-        '''        for i in input:
+        return input
+    
+    def negativeConvert(input):
+        '''
+        Input must be a list.
+        Converts negative numbers to (-1)(number).
+        '''
+        previous = "euehehehe"
+        position = -1
+        skipthis = False
+        for i in input:
             position += 1
-            print("------===------")
-            print("current:" + i)
-           
+            if position+1 < len(input):
+                print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
+            if skipthis == True:
+                skipthis = False
+            elif previous in greateroperators:
+                if i == "-":
+                    print(i)
+                    print(input[position+1])
+                    if input[position+1] not in greateroperators:
+                        input[position] = "-1"
+                        input.insert(position + 1, "*")
+                        input.insert(position, "(")
+                        input.insert(position + 4, ")")
+                        print("fixed up a negative " + str(input))
+                        skipthis = True
 
+            previous = i
+        return input
 
-            if previous:
-                print("previous:" + previous)
-                if i not in greateroperators and previous not in greateroperators:
-                    ainput[position-1] = str(previous) + str(i)
-                    ainput.pop(position)
-                    position -= 1
-            
-            previous = input[position]'''
-        '''            if previous:
-                print("previous:" + previous)
-                if i not in greateroperators and previous not in greateroperators:
-                    ainput[position-1] = (str(previous)+str(i))
-                    print("combined {} and {} to make {}.".format(previous, i, ainput[position-1]))
-                    ainput.pop(position)
-                    position -= 1
-                    print("current list:")
-                    print(input)
-           '''
+    # forgot what this was for and scared to delete
+    '''        for i in input:
+        position += 1
+        print("------===------")
+        print("current:" + i)
         
+
+
+        if previous:
+            print("previous:" + previous)
+            if i not in greateroperators and previous not in greateroperators:
+                ainput[position-1] = str(previous) + str(i)
+                ainput.pop(position)
+                position -= 1
+        
+        previous = input[position]'''
+    '''            if previous:
+            print("previous:" + previous)
+            if i not in greateroperators and previous not in greateroperators:
+                ainput[position-1] = (str(previous)+str(i))
+                print("combined {} and {} to make {}.".format(previous, i, ainput[position-1]))
+                ainput.pop(position)
+                position -= 1
+                print("current list:")
+                print(input)
+        '''
+    
+    def infixToRPN(input):
+        '''
+        Input must be an already-formatted list of each character in an expression.
+        Converts input from Infix notation to Reverse Polish Notation, using the Dijkstra Shunting-Yard Algorithm.
+        Returns a list of each character in the expression.
+        '''
         for i in input:
             print("----------------")
             if stack == []:
@@ -239,22 +305,24 @@ class rpn:
             else:
                 print("-=[0][0][0] Error! Unhandled character! [0][0][0]=-") 
 
+
+            # useful when searching for an error
             print("Input: {}".format(input))
             print("Focus (i): {}".format(i))
             print("Current stack: {}".format(stack))
             print("Initial top of stack: {}".format(topofstack))
             print("Result: {}".format(result))  
 
-
         for s in reversed(stack):
             result.append(s)
 
-        print(result)
-        return result
-    
+        return(result)
 
-    def rpntosolution(input):
-
+    def calculateRPN(input):
+        '''
+        Input must be a list of each character in the expression, which must be formatted in Reverse Polish Notation.
+        Computes a float answer to the inputted expression.
+        '''
         def conkulate(a, b, i):
             if i == "+":
                 m = a + b
@@ -343,3 +411,32 @@ class rpn:
         result = stack[-1]
         return result
 
+    def infixToGoodInfix(input):
+        '''
+        Input must be a string expression/equation, formatted in infix (normal) notation.
+        Cleans up expression so that infixToRPN() can convert it properly, and calculateRPN() can process it properly.
+        Ex:
+        sin(x) -> a(x)
+        pi(x) -> t(x)
+        (a)(b) -> (a)*(b)
+        -x -> (-1*x)
+        '''
+        b = rpn.processAdvops(input)
+        b = list(b)
+        b = rpn.impMultAdvops(b)
+        b = rpn.impMultParens(b)
+        b = rpn.impMultConstants(b)
+        b = rpn.numCombine(b)
+        b = rpn.negativeConvert(b)
+        return b
+    
+    def calculateInfix(input):
+        '''
+        Input must be a string expression/equation, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and pi.
+        Calculates mathematical value of input.
+        Ex: 2(sin(pi/2)^2) would return 2.
+        '''
+        input = rpn.infixToGoodInfix(input)
+        input = rpn.infixToRPN(input)
+        result = rpn.calculateRPN(input)
+        return result
