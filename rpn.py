@@ -3,7 +3,6 @@ import math
 #TODO
 # variable replacement ig 
 # probably test to see it actually works on all functions
-# code is stupid messy, clean this stuff up, put it in functions, use good practice, whatever
 
 
 
