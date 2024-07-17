@@ -48,9 +48,11 @@ pemdas = {
 
 class rpn:
     '''
-    Converts string in infix form to reverse polish notation (outfix).
-    Input should be a string, output will be a list of each character.
-    The only variable used should be x. Many other characters are used internally as placeholders for operations.
+    A library for converting math expressions from infix to outfix (AKA reverse polish notation) to a solution.
+    The expression entered should not be an equation, meaning there should be no "=" equals sign.
+    No characters other than mathematical notation and numbers should be used, except for the constants e and pi, because many characters are used internally as placeholders for operations.
+    OK expression: sin(pi/2)(2+e(abs(-3)/4)
+    Not OK expression: skibidi(3s=3x)--2&(((
     '''
 
     def processAdvops(input):
@@ -60,10 +62,10 @@ class rpn:
         '''
         for op in advancedoperators:
             input = input.replace(op, advancedoperators[op])
-            print("replaced any instances of {} with {}".format(op, advancedoperators[op]))
+            #print("replaced any instances of {} with {}".format(op, advancedoperators[op]))
         for const in constants:
             input = input.replace(const, constants[const])
-            print("replaced any instances of {} with {}".format(const, constants[const]))
+            #print("replaced any instances of {} with {}".format(const, constants[const]))
         return input
 
     def impMultParens(input):
@@ -86,7 +88,7 @@ class rpn:
                         if previous not in operators:
                             if previous not in advancedoperators.values():
                                 input.insert(position, "*")
-                                print("a put a little * at pos " + str(position))
+                                #print("a put a little * at pos " + str(position))
                 elif previous == ")":
                     if i not in operators and i != ")":
                         input.insert(position, "*")
@@ -108,8 +110,8 @@ class rpn:
                     if previous not in operators and previous not in advancedoperators.values():
                         if previous != "(":
                             input.insert(position, "*")
-                            print("b put a little * at pos " + str(position))
-                            print(input)
+                            #print("b put a little * at pos " + str(position))
+                            #print(input)
                             position += 1
                     
             previous = i
@@ -132,7 +134,7 @@ class rpn:
                     if previous not in operators:
                         if previous != "(":
                             input.insert(position, "*")
-                            print("c put a little * at pos " + str(position) + str(i) + str(previous))
+                            #print("c put a little * at pos " + str(position) + str(i) + str(previous))
                             position += 1
                             skipthis = True
             previous = i
@@ -174,19 +176,20 @@ class rpn:
         for i in input:
             position += 1
             if position+1 < len(input):
-                print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
+                pass
+                #print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
             if skipthis == True:
                 skipthis = False
             elif previous in greateroperators:
                 if i == "-":
-                    print(i)
-                    print(input[position+1])
+                    #print(i)
+                    #print(input[position+1])
                     if input[position+1] not in greateroperators:
                         input[position] = "-1"
                         input.insert(position + 1, "*")
                         input.insert(position, "(")
                         input.insert(position + 4, ")")
-                        print("fixed up a negative " + str(input))
+                        #print("fixed up a negative " + str(input))
                         skipthis = True
 
             previous = i
@@ -223,19 +226,19 @@ class rpn:
         '''
         Input must be an already-formatted list of each character in an expression.
         Converts input from Infix notation to Reverse Polish Notation, using the Dijkstra Shunting-Yard Algorithm.
-        Returns a list of each character in the expression.
+        Returns a list of each character in the expression, with substitutive symbols used in place of multi-character operations such as sin() or sqrt().
         '''
         for i in input:
-            print("----------------")
+            #print("----------------")
             if stack == []:
                 topofstack = "none"
             else:
                 topofstack = stack[-1]
                 
-            print(topofstack)
+            #print(topofstack)
 
             def pemdassify(i): # somewhere around here
-                    print("appended stack 3")
+                    #print("appended stack")
                     for f in reversed(stack): # top and back
                         if f == "(":
                             stack.append(i)
@@ -243,31 +246,26 @@ class rpn:
                         elif f in advancedoperators.values():
                             result.append(f)
                             stack.pop()
-                            print("dealt with advop in pemdas cycle: " + f)
+                            #print("dealt with advop in pemdas cycle: " + f)
                         elif pemdas.get(i) <= pemdas.get(f):
                             result.append(f)
                             stack.pop()
-                            print("dumb2")
                         elif pemdas.get(i) > pemdas.get(f):
-                            print("dumb3")
                             stack.append(i)
                             break
                         else:
-                            print("error! pemdas part is broken again.")
+                            print("[rpn] Error! pemdas part is broken again.")
                         
                         if stack == []:
                             stack.append(i)
-                    print(stack)            
+                    #print(stack)            
             
 
             if i not in greateroperators and i not in advancedoperators.values():
                 result.append(i)
-                print("appended result with numbah")
             elif i == "(":
                 stack.append(i)
-                print("appended stack parenthesie")
             elif i == ")":
-                print("did the parenthesie thing")
                 for f in reversed(stack):
                     if f == '(':
                         stack.pop()
@@ -278,40 +276,36 @@ class rpn:
 
             elif i in advancedoperators.values():
                     stack.append(i)
-                    print("appended stack 1.5") # if this method gets screwed up, its probably here lol
+                    # if this method gets screwed up, its probably here lol
 
             elif i in operators:
                 if stack == []:
                     stack.append(i)
-                    print("appended stack 1")
 
                 elif topofstack == '(':
                     stack.append(i)
-                    print("appended stack 1")
                 
                 elif topofstack in advancedoperators.values():
                     pemdassify(i)
-                    print("appended stack with operator, pushed advop to result. pemdas as garfield intended")
+                    #print("appended stack with operator, pushed advop to result. pemdas as garfield intended")
 
                 elif pemdas.get(i) > pemdas.get(stack[-1]):
                     stack.append(i)
-                    print("appended stack 2")
                 
-
                 elif pemdas.get(i) <= pemdas.get(stack[-1]):
                     pemdassify(i)
                 else:
-                    print("unhandled character after pemdasing") 
+                    print("[rpn] Error! Unhandled character after pemdassifying expression.") 
             else:
-                print("-=[0][0][0] Error! Unhandled character! [0][0][0]=-") 
+                print("[rpn] Error! Unhandled character!") 
 
 
             # useful when searching for an error
-            print("Input: {}".format(input))
+            '''print("Input: {}".format(input))
             print("Focus (i): {}".format(i))
             print("Current stack: {}".format(stack))
             print("Initial top of stack: {}".format(topofstack))
-            print("Result: {}".format(result))  
+            print("Result: {}".format(result))  '''
 
         for s in reversed(stack):
             result.append(s)
@@ -385,7 +379,7 @@ class rpn:
                 b = float(stack[-1])
                 a = float(stack[-2])
                 m = conkulate(a, b, i)
-                print("{} {} {} = {}".format(a, i, b, m))
+                #print("{} {} {} = {}".format(a, i, b, m))
                 stack.pop()
                 stack.pop()
                 stack.append(m)
@@ -394,7 +388,7 @@ class rpn:
             elif i in advancedoperators.values(): # tan or exp or something
                 a = float(stack[-1])
                 m = corgulate(a, i)
-                print("{} of {} = {}".format(i, a, m))
+                #print("{} of {} = {}".format(i, a, m))
                 stack.pop()
                 stack.append(m)
                 m = str(m)
@@ -405,9 +399,8 @@ class rpn:
                         i = math.pi
                     if i == "s":
                         i = math.exp(1) # e^1
-                print("added to stack: " + str(i))
+                #print("added to stack: " + str(i))
                 stack.append(i)
-        print(stack)
         result = stack[-1]
         return result
 
@@ -432,11 +425,18 @@ class rpn:
     
     def calculateInfix(input):
         '''
-        Input must be a string expression/equation, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and pi.
+        Input must be a string expression, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and pi.
         Calculates mathematical value of input.
         Ex: 2(sin(pi/2)^2) would return 2.
         '''
-        input = rpn.infixToGoodInfix(input)
-        input = rpn.infixToRPN(input)
-        result = rpn.calculateRPN(input)
-        return result
+        try:
+            input = rpn.infixToGoodInfix(input)
+            input = rpn.infixToRPN(input)
+            result = rpn.calculateRPN(input)
+            return result
+        except ValueError:
+            return(print("[rpn] Syntax Error! Please double-check your expression and make sure the notation is correct."))
+        except ZeroDivisionError:
+            return(print("[rpn] Please don't try to divide by zero."))
+        except:
+            return(print("[rpn] Something went wrong. Double-check the formatting of your input."))

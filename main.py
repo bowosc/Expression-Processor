@@ -1,7 +1,7 @@
 import math
 from rpn import rpn
 
-formula = "3/2"
+formula = "5pi"
 
 def run():
     b = rpn.calculateInfix(formula)
