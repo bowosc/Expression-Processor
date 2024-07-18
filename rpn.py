@@ -1,8 +1,8 @@
 import math
 
 #TODO
-# variable replacement ig 
-# probably test to see it actually works on all functions
+# variable replacement?
+# probably test to see it actually works with more edge cases
 
 
 
@@ -167,29 +167,29 @@ class rpn:
     def negativeConvert(input):
         '''
         Input must be a list.
-        Converts negative numbers to (-1)(number).
+        Converts negative numbers into a form that's more readable for the algorithm.
         '''
         previous = "euehehehe"
         position = -1
         skipthis = False
         for i in input:
             position += 1
-            if position+1 < len(input):
-                pass
-                #print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
+            if position+1 >= len(input):
+                break
+            #print("---------")
+            #print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
             if skipthis == True:
                 skipthis = False
-            elif previous in greateroperators:
+            if previous == "euehehehe" or previous in greateroperators:
                 if i == "-":
                     #print(i)
                     #print(input[position+1])
-                    if input[position+1] not in greateroperators:
-                        input[position] = "-1"
-                        input.insert(position + 1, "*")
-                        input.insert(position, "(")
-                        input.insert(position + 4, ")")
-                        #print("fixed up a negative " + str(input))
-                        skipthis = True
+                    
+                    input[position+1] = "-" + str(input[position+1])
+                    input.pop(position)
+                        
+                    #print("fixed up a negative " + str(input))
+                    skipthis = True
 
             previous = i
         return input
@@ -428,14 +428,14 @@ class rpn:
         Calculates mathematical value of input.
         Ex: 2(sin(pi/2)^2) would return 2.
         '''
-        try:
-            input = rpn.infixToGoodInfix(input)
-            input = rpn.infixToRPN(input)
-            result = rpn.calculateRPN(input)
-            return result
-        except ValueError:
+        #try:
+        input = rpn.infixToGoodInfix(input)
+        input = rpn.infixToRPN(input)
+        result = rpn.calculateRPN(input)
+        return result
+        '''except ValueError:
             return(print("[rpn] Syntax Error! Please double-check your expression and make sure the notation is correct."))
         except ZeroDivisionError:
             return(print("[rpn] Please don't try to divide by zero."))
         except:
-            return(print("[rpn] Something went wrong. Double-check the formatting of your input."))
+            return(print("[rpn] Something went wrong. Double-check the formatting of your input."))'''

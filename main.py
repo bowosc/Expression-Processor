@@ -5,8 +5,7 @@ formula = "(-3/2)(4+ln(2))/5^e^pi"
 
 def run():
     b = rpn.calculateInfix(formula)
-    print("=====-----finale:")
-    print(b)
+    print("{} = {}".format(formula, b))
 
 if __name__ == "__main__":
     run()
