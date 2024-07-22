@@ -3,7 +3,7 @@ import math
 #TODO
 # Imaginary number handling
 # Variable replacement?
-# Test more edge cases
+# Test more edge-case, weird notations?
 
 operators = ['+', '-', '*', '/', '^']
 greateroperators = ['+', '-', '*', '/', '^', '(', ')']
@@ -233,8 +233,11 @@ class rpn:
         '''
         Input must be an already-formatted list of each character in an expression.
         Converts input from Infix notation to Reverse Polish Notation, using the Dijkstra Shunting-Yard Algorithm.
-        Returns a list of each character in the expression, with substitutive symbols used in place of multi-character operations such as sin() or sqrt().
+        Returns a list of each character in the expression, with substitutive symbols used in place of constants or multi-character operations such as sin() or sqrt().
         '''
+
+        input = rpn.infixToGoodInfix(input)
+
         for i in input:
             #print("----------------")
             if stack == []:
@@ -442,7 +445,6 @@ class rpn:
         Ex: 2(sin(pi/2)^2) would return 2.
         '''
         try:
-            input = rpn.infixToGoodInfix(input)
             input = rpn.infixToRPN(input)
             result = rpn.calculateRPN(input)
             return result
