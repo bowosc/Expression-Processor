@@ -1,14 +1,20 @@
 import math
 
 #TODO
-# variable replacement?
-# probably test to see it actually works with more edge cases
-
-
+# Imaginary number handling
+# Variable replacement?
+# Test more edge cases
 
 operators = ['+', '-', '*', '/', '^']
 greateroperators = ['+', '-', '*', '/', '^', '(', ')']
-advancedoperators = { # these are ordered like this because the search & replace tool goes first to last, and all the inverse trig will get screwed up if it replaces the basic trig strings first.
+advancedoperators = { 
+    
+    # Note that advanced operators are sometimes referred to as ADVOPS 
+    # in function names, variable names, and comments. 
+    # These are ordered like this because the search & replace tool 
+    # goes first to last, and all the inverse trig will get screwed 
+    # up if it replaces the basic trig strings first. 
+
         'arcsin': 'h', 
         'arccos': 'j', 
         'arctan': 'k', 
@@ -29,7 +35,8 @@ advancedoperators = { # these are ordered like this because the search & replace
 constants = {
     'e': 's',
     'pi': 't',
-    'π': 't'
+    'π': 't',
+    'i': 'i'
 }
 stack = []
 result = []
@@ -42,8 +49,9 @@ pemdas = {
         "-": 1
     }
 
-# ẍẍẍ\o_,ẍẍẍ 
-#      `cmere
+class nonrealValueError(Exception):
+    print("[rpn] Nonreal value encountered. This process cannot compute imaginary values at this point.")
+    pass
 
 class rpn:
     '''
@@ -312,6 +320,7 @@ class rpn:
         return(result)
 
     def calculateRPN(input):
+        print(input)
         '''
         Input must be a list of each character in the expression, which must be formatted in Reverse Polish Notation.
         Computes a float answer to the inputted expression.
@@ -384,7 +393,7 @@ class rpn:
                 stack.append(m)
                 m = str(m)
 
-            elif i in advancedoperators.values(): # tan or exp or something
+            elif i in advancedoperators.values(): # tan or exp or whatever
                 a = float(stack[-1])
                 m = corgulate(a, i)
                 #print("{} of {} = {}".format(i, a, m))
@@ -398,6 +407,10 @@ class rpn:
                         i = math.pi
                     if i == "s":
                         i = math.exp(1) # e^1
+                    if i == "i":
+                        # imaginary number, annoying to process
+                        raise nonrealValueError
+                        
                 #print("added to stack: " + str(i))
                 stack.append(i)
         result = stack[-1]
@@ -428,14 +441,16 @@ class rpn:
         Calculates mathematical value of input.
         Ex: 2(sin(pi/2)^2) would return 2.
         '''
-        #try:
-        input = rpn.infixToGoodInfix(input)
-        input = rpn.infixToRPN(input)
-        result = rpn.calculateRPN(input)
-        return result
-        '''except ValueError:
+        try:
+            input = rpn.infixToGoodInfix(input)
+            input = rpn.infixToRPN(input)
+            result = rpn.calculateRPN(input)
+            return result
+        except ValueError:
             return(print("[rpn] Syntax Error! Please double-check your expression and make sure the notation is correct."))
         except ZeroDivisionError:
             return(print("[rpn] Please don't try to divide by zero."))
+        except nonrealValueError:
+            return
         except:
-            return(print("[rpn] Something went wrong. Double-check the formatting of your input."))'''
+            return(print("[rpn] Something went wrong. Double-check the formatting of your input, then make a bug report."))

@@ -4,4 +4,6 @@
 
 <p> This project converts a given expression from infix to outfix (Reverse Polish Notation), and then calculates the result.  </p>
 
-<p> It accepts expressions, not equations, meaning there should be no "=" equals sign.  </p>
+<p> It accepts expressions, not equations, meaning there should be no "=" equals sign. </p>
+
+<p> Please note that this repository cannot handle imaginary values right now, but will soon. </p>
