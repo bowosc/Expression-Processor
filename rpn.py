@@ -2,7 +2,6 @@ import math
 
 #TODO
 # Imaginary number handling
-# Variable replacement?
 # Test more edge-case, weird notations?
 
 operators = ['+', '-', '*', '/', '^']
@@ -38,9 +37,6 @@ constants = {
     'π': 't',
     'i': 'i'
 }
-stack = []
-result = []
-topofstack = "none"
 pemdas = {
         "^": 5, 
         "*": 4, 
@@ -235,6 +231,10 @@ class rpn:
         Converts input from Infix notation to Reverse Polish Notation, using the Dijkstra Shunting-Yard Algorithm.
         Returns a list of each character in the expression, with substitutive symbols used in place of constants or multi-character operations such as sin() or sqrt().
         '''
+
+        stack = []
+        result = []
+        topofstack = "none"
 
         input = rpn.infixToGoodInfix(input)
 
