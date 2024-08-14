@@ -6,8 +6,7 @@ import math
 
 operators = ['+', '-', '*', '/', '^']
 greateroperators = ['+', '-', '*', '/', '^', '(', ')']
-advancedoperators = { 
-    
+advancedoperators = {  
     # Note that advanced operators are sometimes referred to as ADVOPS 
     # in function names, variable names, and comments. 
     # These are ordered like this because the search & replace tool 
@@ -46,7 +45,7 @@ pemdas = {
     }
 
 class nonrealValueError(Exception):
-    print("[rpn] Nonreal value encountered. This process cannot compute imaginary values at this point.")
+    '''Raised when rpn.py encounters an imaginary value, which it can't compute yet.'''
     pass
 
 class rpn:
@@ -173,7 +172,7 @@ class rpn:
         Input must be a list.
         Converts negative numbers into a form that's more readable for the algorithm.
         '''
-        previous = "euehehehe"
+        previous = None
         position = -1
         skipthis = False
         for i in input:
@@ -184,7 +183,7 @@ class rpn:
             #print("p: {}, i: {}, p+1: {}, pos: {}".format(previous, i, input[position+1], position))
             if skipthis == True:
                 skipthis = False
-            if previous == "euehehehe" or previous in greateroperators:
+            if previous == None or previous in greateroperators:
                 if i == "-":
                     #print(i)
                     #print(input[position+1])
@@ -376,7 +375,7 @@ class rpn:
                 if i == "r":
                     m = abs(a)
             except ValueError:
-                print("Domain error!")
+                print("[rpn] Domain error!")
             return m
 
         result = []
@@ -395,7 +394,6 @@ class rpn:
                 stack.pop()
                 stack.append(m)
                 m = str(m)
-
             elif i in advancedoperators.values(): # tan or exp or whatever
                 a = float(stack[-1])
                 m = corgulate(a, i)
@@ -403,7 +401,6 @@ class rpn:
                 stack.pop()
                 stack.append(m)
                 m = str(m)
-
             else: # must be a number ig 
                 if i in constants.values():
                     if i == "t":
@@ -411,7 +408,7 @@ class rpn:
                     if i == "s":
                         i = math.exp(1) # e^1
                     if i == "i":
-                        # imaginary number, annoying to process
+                        # imaginary number
                         raise nonrealValueError
                         
                 #print("added to stack: " + str(i))
@@ -440,7 +437,7 @@ class rpn:
     
     def calculateInfix(input):
         '''
-        Input must be a string expression, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and pi.
+        Input must be a string expression, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and/or pi.
         Calculates mathematical value of input.
         Ex: 2(sin(pi/2)^2) would return 2.
         '''
@@ -453,6 +450,6 @@ class rpn:
         except ZeroDivisionError:
             return(print("[rpn] Please don't try to divide by zero."))
         except nonrealValueError:
-            return
+            return(print("[rpn] Imaginary value encountered. rpn.py cannot yet calculate imaginary values. Sorry! "))
         except:
             return(print("[rpn] Something went wrong. Double-check the formatting of your input, then make a bug report."))
