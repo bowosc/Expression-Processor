@@ -1,7 +1,7 @@
 import math
 from rpn import rpn
 
-formula = "(-1)(-3/2)(4+ln(2))/5^e"
+formula = "(cos(pi))(-3/2)(4+ln(2))/5^e"
 
 def run():
     b = rpn.calculateInfix(formula)

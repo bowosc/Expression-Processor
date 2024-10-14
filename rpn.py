@@ -197,33 +197,6 @@ class rpn:
             previous = i
         return input
 
-    # forgot what this was for and scared to delete
-    '''        for i in input:
-        position += 1
-        print("------===------")
-        print("current:" + i)
-        
-
-
-        if previous:
-            print("previous:" + previous)
-            if i not in greateroperators and previous not in greateroperators:
-                ainput[position-1] = str(previous) + str(i)
-                ainput.pop(position)
-                position -= 1
-        
-        previous = input[position]'''
-    '''            if previous:
-            print("previous:" + previous)
-            if i not in greateroperators and previous not in greateroperators:
-                ainput[position-1] = (str(previous)+str(i))
-                print("combined {} and {} to make {}.".format(previous, i, ainput[position-1]))
-                ainput.pop(position)
-                position -= 1
-                print("current list:")
-                print(input)
-        '''
-    
     def infixToRPN(input):
         '''
         Input must be an already-formatted list of each character in an expression.
@@ -327,7 +300,7 @@ class rpn:
         Input must be a list of each character in the expression, which must be formatted in Reverse Polish Notation.
         Computes a float answer to the inputted expression.
         '''
-        def conkulate(a, b, i):
+        def conkulate(a, b, i): #binary operators
             if i == "+":
                 m = a + b
             elif i == "-":
@@ -340,32 +313,8 @@ class rpn:
                 m = a ** b
             return m
         
-        def corgulate(a, i):
+        def corgulate(a, i): #unary operators
             try:
-                if i == "h":
-                    m = math.asin(a)
-                if i == "j":
-                    m = math.acos(a)
-                if i == "k":
-                    m = math.atan(a)
-                if i == "l":
-                    m = math.acos(1/a) # arcsec
-                if i == "m":
-                    m = math.acsc(1/a) # arccsc
-                if i == "n":
-                    m = math.atan(1/a) # arctan
-                if i == "a":
-                    m = math.sin(a)
-                if i == "b":
-                    m = math.cos(a)
-                if i == "c":
-                    m = math.tan(a)
-                if i == "d":
-                    m = 1 / math.cos(a) # sec
-                if i == "f":
-                    m = 1 / math.sin(a) # csc
-                if i == "g":
-                    m = 1 / math.tan(a) # cot
                 if i == "o":
                     m = math.exp(a)
                 if i == "p":
@@ -374,6 +323,35 @@ class rpn:
                     m = math.log(a)
                 if i == "r":
                     m = abs(a)
+                else:
+                    a = math.radians(a) # math.sin() and friends accept radians input
+                    if i == "h":
+                        m = math.asin(a)
+                    if i == "j":
+                        m = math.acos(a)
+                    if i == "k":
+                        m = math.atan(a)
+                    if i == "l":
+                        m = math.acos(1/a) # arcsec
+                    if i == "m":
+                        m = math.acsc(1/a) # arccsc
+                    if i == "n":
+                        m = math.atan(1/a) # arctan
+                    if i == "a":
+                        m = math.sin(a)
+                    if i == "b":
+                        m = math.cos(a)
+                    if i == "c":
+                        m = math.tan(a)
+                    if i == "d":
+                        m = 1 / math.cos(a) # sec
+                    if i == "f":
+                        m = 1 / math.sin(a) # csc
+                    if i == "g":
+                        m = 1 / math.tan(a) # cot
+                
+
+                
             except ValueError:
                 print("[rpn] Domain error!")
             return m
@@ -449,6 +427,8 @@ class rpn:
             return(print("[rpn] Syntax Error! Please double-check your expression and make sure the notation is correct."))
         except ZeroDivisionError:
             return(print("[rpn] Please don't try to divide by zero."))
+        except TypeError:
+            return("[rpn] TypeError. Might be my bad, but you should probably check your input just to be sure.")
         except nonrealValueError:
             return(print("[rpn] Imaginary value encountered. rpn.py cannot yet calculate imaginary values. Sorry! "))
         except:
