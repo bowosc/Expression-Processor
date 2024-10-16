@@ -1,5 +1,6 @@
 import math
 
+
 #TODO
 # Imaginary number handling
 # Test more edge-case, weird notations?
@@ -57,9 +58,8 @@ class rpn:
     Not OK expression: skibidi(3s=3x)--2&(((
     '''
 
-    def processAdvops(input):
+    def processAdvops(input: str) -> str:
         '''
-        Input must be a string.
         Search and replaces all operators and constants to be single chars.
         '''
         for op in advancedoperators:
@@ -70,9 +70,8 @@ class rpn:
             #print("replaced any instances of {} with {}".format(const, constants[const]))
         return input
 
-    def impMultParens(input):
+    def impMultParens(input: list[str|float]) -> list[str|float]:
         '''
-        Input must be a list.
         Adds multiplication signs before openparens and after closedparens that don't already have operators.
         ''' 
         position = -1
@@ -97,9 +96,8 @@ class rpn:
             previous = i
         return input
     
-    def impMultAdvops(input):
+    def impMultAdvops(input: list[str|float]) -> list[str|float]:
         '''
-        Input must be a list.
         Adds multiplication signs before and after advancedoperators that don't already have operators.
         '''
         previous = None
@@ -119,9 +117,8 @@ class rpn:
             previous = i
         return input
     
-    def impMultConstants(input):
+    def impMultConstants(input: list[str|float]) -> list[str|float]:
         '''
-        Input must be a list.
         Adds multiplication signs before constants that don't already have operators.
         '''
         previous = None
@@ -142,9 +139,8 @@ class rpn:
             previous = i
         return input
 
-    def numCombine(input):
+    def numCombine(input: list[str|float]) -> list[str|float]:
         '''
-        Input must be a list.
         Combines multiple floats (or anything without operators between them) into one element.
         '''
         previous = None
@@ -167,9 +163,8 @@ class rpn:
                 previous = input[c-1]
         return input
     
-    def negativeConvert(input):
+    def negativeConvert(input: list[str|float]) -> list[str|float]:
         '''
-        Input must be a list.
         Converts negative numbers into a form that's more readable for the algorithm.
         '''
         previous = None
@@ -197,7 +192,7 @@ class rpn:
             previous = i
         return input
 
-    def infixToRPN(input):
+    def infixToRPN(input: list[str|float]) -> list[str|float]:
         '''
         Input must be an already-formatted list of each character in an expression.
         Converts input from Infix notation to Reverse Polish Notation, using the Dijkstra Shunting-Yard Algorithm.
@@ -294,13 +289,15 @@ class rpn:
 
         return(result)
 
-    def calculateRPN(input):
-        print(input)
+    def calculateRPN(input: list[str|float]) -> list[str|float]:
         '''
         Input must be a list of each character in the expression, which must be formatted in Reverse Polish Notation.
         Computes a float answer to the inputted expression.
         '''
-        def conkulate(a, b, i): #binary operators
+        def conkulate(a, b, i): 
+            '''
+            Executes binary operators.
+            '''
             if i == "+":
                 m = a + b
             elif i == "-":
@@ -313,7 +310,10 @@ class rpn:
                 m = a ** b
             return m
         
-        def corgulate(a, i): #unary operators
+        def corgulate(a, i):
+            '''
+            Executes unary operators.
+            '''
             try:
                 if i == "o":
                     m = math.exp(a)
@@ -324,7 +324,9 @@ class rpn:
                 if i == "r":
                     m = abs(a)
                 else:
-                    a = math.radians(a) # math.sin() and friends accept radians input
+                    print(a)
+                   
+                     # math.sin() and friends accept radians input
                     if i == "h":
                         m = math.asin(a)
                     if i == "j":
@@ -394,9 +396,9 @@ class rpn:
         result = stack[-1]
         return result
 
-    def infixToGoodInfix(input):
+    def infixToGoodInfix(input: str) -> str:
         '''
-        Input must be a string expression/equation, formatted in infix (normal) notation.
+        Input must be a string expression, formatted in infix (normal) notation.
         Cleans up expression so that infixToRPN() can convert it properly, and calculateRPN() can process it properly.
         Ex:
         sin(x) -> a(x)
@@ -413,7 +415,7 @@ class rpn:
         b = rpn.negativeConvert(b)
         return b
     
-    def calculateInfix(input):
+    def calculateInfix(input: str) -> float:
         '''
         Input must be a string expression, formatted in infix (normal) notation. No characters other than mathematical notation and numbers should be used, except for the constants e and/or pi.
         Calculates mathematical value of input.
