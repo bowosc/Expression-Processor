@@ -55,7 +55,7 @@ class rpn:
     The expression entered should not be an equation, meaning there should be no "=" equals sign.
     No characters other than mathematical notation and numbers should be used, except for the constants e and pi, because many characters are used internally as placeholders for operations.
     OK expression: sin(pi/2)(2+e(abs(-3)/4)
-    Not OK expression: skibidi(3s=3x)--2&(((
+    Not OK expression: skibidi(3s=3x)---2&(((
     '''
 
     def processAdvops(input: str) -> str:
