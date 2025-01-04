@@ -1,6 +1,7 @@
 <h3> Mathematical Expression Processor </h3>
 
-<p> I didn't find a module that did this in my 10-second google search, so I built this. </p>
+<p> I didn't find a module that did this in my 10-second Google search, so I built this. </p>
+<i>Update: I did a 30-second Google search and found Sympy and now use that instead. Sorry, Expression-Processor.</i>
 
 <p> This project converts a given expression from infix to outfix (Reverse Polish Notation), and then calculates the result. </p>
 <p> Examples: </p>
